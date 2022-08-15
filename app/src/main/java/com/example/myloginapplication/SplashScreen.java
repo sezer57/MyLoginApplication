@@ -6,19 +6,19 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Giris extends AppCompatActivity {
+public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_giris);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(Giris.this, MainActivity.class));
+                startActivity(new Intent(SplashScreen.this, MainActivity.class));
                 finish();
             }
-        }, 2000);
+        }, 3000);
 
     }
 

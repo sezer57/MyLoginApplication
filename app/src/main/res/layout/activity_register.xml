@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity"
-    android:background="@drawable/background">
+    android:background="@drawable/newbackground">
 
     <TextView
         android:id="@+id/registername"
-        android:layout_width="match_parent"
+        android:layout_width="335dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"
@@ -17,8 +17,8 @@
         android:layout_marginBottom="50dp"
         android:gravity="center"
         android:text="Register"
-        android:textColor="@color/white"
-        android:textSize="35dp"
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textSize="40dp"
         android:textStyle="bold" />
 
     <EditText
@@ -35,8 +35,8 @@
         android:drawablePadding="20dp"
         android:hint="Username"
         android:padding="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
 
     <EditText
         android:id="@+id/email"
@@ -52,8 +52,8 @@
         android:drawablePadding="20dp"
         android:hint="Enter Mail"
         android:padding="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
 
     <EditText
         android:id="@+id/password"
@@ -70,8 +70,8 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
 
     <EditText
         android:id="@+id/confirmpassword"
@@ -88,8 +88,8 @@
         android:hint="Confirm Password"
         android:inputType="textPassword"
         android:padding="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/register"
@@ -111,7 +111,7 @@
         android:layout_below="@id/register"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="-15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:text="Already have an account?"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/newbackground"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,13 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
         android:gravity="center"
         android:text="Sign In"
-        android:textColor="@color/white"
-        android:textSize="35dp"
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textSize="40dp"
         android:textStyle="bold" />
 
     <EditText
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/signin"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="38dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:background="#30ffffff"
@@ -35,8 +35,8 @@
         android:drawablePadding="20dp"
         android:hint="Username"
         android:padding="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
 
     <EditText
         android:id="@+id/password"
@@ -53,8 +53,8 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginbtn"
@@ -76,7 +76,7 @@
         android:layout_below="@id/loginbtn"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:text="Forgot password?"
@@ -88,9 +88,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/forgotpass"
-        android:layout_marginTop="38dp"
         android:layout_marginStart="100dp"
-        android:text="Already have an account?"
+        android:layout_marginTop="40dp"
+        android:text="Don't have an account?"
         android:textColor="@color/cardview_dark_background"
         android:textStyle="bold" />
 
@@ -98,51 +98,16 @@
         android:id="@+id/SignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="481dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="587dp"
         android:layout_toEndOf="@id/alreadyaccount"
         android:text="Sign Up"
         android:textColor="@color/purple_700"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/others"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/alreadyaccount"
-        android:layout_marginTop="50dp"
-        android:layout_centerHorizontal="true"
-        android:text="or sign in with"
-        android:textColor="@color/cardview_dark_background"
-        android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/socialicons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        android:gravity="center">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/mail" />
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/facebook" />
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/twitter" />
-
-    </LinearLayout>
 
 
 </RelativeLayout>
