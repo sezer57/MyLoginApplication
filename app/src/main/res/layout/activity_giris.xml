@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SplashScreen"
-    android:background="@drawable/newbackground">
+    android:background="@drawable/deneme">
 
 
     <ImageView
         android:layout_width="399dp"
-        android:layout_height="401dp"
+        android:layout_height="640dp"
         android:layout_margin="20dp"
         android:src="@drawable/myloc"
         tools:ignore="MissingConstraints"

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Menu"
+    android:background="@drawable/background">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="448dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/istanbul"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="50dp" />
+
+    <ImageView
+        android:layout_width="186dp"
+        android:layout_height="135dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/menulogosu"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="50dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/profile"
+        android:layout_width="130dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="250dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/roundbtn3"
+        android:drawableLeft="@drawable/profile"
+        android:text="profıle" />
+
+    <EditText
+        android:id="@+id/places"
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:drawablePadding="20dp"
+        android:hint="Places"
+        android:padding="20dp"
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
+
+    <EditText
+        android:id="@+id/mylocation"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/places"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:drawablePadding="20dp"
+        android:hint="My Location"
+        android:padding="20dp"
+        android:textColor="@color/material_on_background_emphasis_medium"
+        android:textColorHint="@color/material_on_background_emphasis_medium" />
+
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="291dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/pin"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="6dp"
+        tools:layout_editor_absoluteY="165dp" />
+
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="211dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/place"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="6dp"
+        tools:layout_editor_absoluteY="165dp" />
+
+
+</RelativeLayout>

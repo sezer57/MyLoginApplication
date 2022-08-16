@@ -14,7 +14,6 @@ import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button loginbtn;
     EditText username, password;
 
     @Override
@@ -22,9 +21,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loginbtn = findViewById(R.id.loginbtn);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+
+
 
         TextView btn = findViewById(R.id.SignUp);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -34,12 +34,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        loginbtn.setOnClickListener(new View.OnClickListener() {
+        TextView btn2 = findViewById(R.id.loginbtn);
+        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //
+                startActivity(new Intent(MainActivity.this, Menu.class));
             }
         });
+
+
 
     }
 }
