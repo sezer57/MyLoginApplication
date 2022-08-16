@@ -14,7 +14,7 @@
         android:layout_margin="20dp"
         android:src="@drawable/myloc"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="6dp"
+        tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="165dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

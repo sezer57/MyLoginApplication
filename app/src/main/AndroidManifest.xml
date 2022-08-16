@@ -18,6 +18,12 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".Profile"
+            android:exported="false" />
+        <activity
+            android:name=".Menu"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity

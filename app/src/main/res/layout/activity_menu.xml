@@ -33,9 +33,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/profile"
-        android:layout_width="130dp"
+        android:layout_width="140dp"
         android:layout_height="48dp"
-        android:layout_marginStart="250dp"
+        android:layout_marginStart="230dp"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
@@ -43,39 +43,41 @@
         android:drawableLeft="@drawable/profile"
         android:text="profıle" />
 
-    <EditText
+    <TextView
         android:id="@+id/places"
-        android:layout_width="125dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="200dp"
+        android:layout_width="282dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="195dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:drawablePadding="20dp"
         android:hint="Places"
         android:padding="20dp"
         android:textColor="@color/material_on_background_emphasis_medium"
-        android:textColorHint="@color/material_on_background_emphasis_medium" />
+        android:textColorHint="@color/material_on_background_emphasis_medium"
+        android:textSize="30dp" />
 
-    <EditText
+    <TextView
         android:id="@+id/mylocation"
-        android:layout_width="160dp"
-        android:layout_height="60dp"
+        android:layout_width="278dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/places"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="-5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:drawablePadding="20dp"
         android:hint="My Location"
         android:padding="20dp"
         android:textColor="@color/material_on_background_emphasis_medium"
-        android:textColorHint="@color/material_on_background_emphasis_medium" />
+        android:textColorHint="@color/material_on_background_emphasis_medium"
+        android:textSize="30dp" />
 
     <ImageView
-        android:layout_width="26dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="150dp"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="291dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
@@ -85,10 +87,10 @@
         tools:layout_editor_absoluteY="165dp" />
 
     <ImageView
-        android:layout_width="26dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="211dp"
+        android:layout_width="49dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="205dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:src="@drawable/place"
