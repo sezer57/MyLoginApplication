@@ -24,15 +24,12 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView login, register;
-    private FirebaseAuth mAuth;
     private EditText editusername, editemail, editpassword, editconfirmpassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        mAuth = FirebaseAuth.getInstance();
 
         login = (TextView) findViewById(R.id.login);
         login.setOnClickListener(this);
@@ -45,12 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         editpassword = (EditText) findViewById(R.id.password);
         editconfirmpassword = (EditText) findViewById(R.id.confirmpassword);
 
-
-
-
-
     }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -85,38 +77,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             editconfirmpassword.requestFocus();
             return;
         }
-        /*if ((password)!=(confirmpassword)){
-            editconfirmpassword.setError("Passwords are not same");
-        }*/
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             editemail.setError("Invalid email");
             editemail.requestFocus();
             return;
         }
-
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    User user = new User(username,email);
-
-                    FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this, "Registered Successfully", Toast.LENGTH_LONG).show();
-                            }
-                            else{
-                                Toast.makeText(RegisterActivity.this, "Failed to Register", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                else{
-                    Toast.makeText(RegisterActivity.this, "Failed to Register", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
     }
 

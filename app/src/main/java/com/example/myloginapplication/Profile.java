@@ -29,6 +29,15 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+        TextView btn = findViewById(R.id.backtomenu);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Profile.this, Menu.class));
+            }
+        });
+
+
     }
 
 }

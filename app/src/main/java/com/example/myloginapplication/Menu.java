@@ -22,6 +22,14 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        TextView button2 = findViewById(R.id.mylocation);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Menu.this, Map.class));
+            }
+        });
+
 
     }
 
