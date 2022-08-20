@@ -1,173 +1,180 @@
 package com.example.myloginapplication;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.example.myloginapplication.databinding.ActivityMainBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.example.myloginapplication.databinding.ActivityMapBinding;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
-public class Map extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    GoogleMap mapAPI;
-    //private ActivityMapsBinding binding;
-    SupportMapFragment mapFragment;
-    Location currentLocation;
-    Marker mCurrentLocationMarker;
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    private static final int REQUEST_CODE = 101;
+public class Map extends FragmentActivity implements
+        GoogleMap.OnInfoWindowClickListener,
+        OnMapReadyCallback {
+
+    Handler mainHandler = new Handler();
+    ProgressDialog progressDialog;
+    Dialog myPop;
+
+    private ActivityMapBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        myPop = new Dialog(this);
 
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        //getCurrentLocation();
+        binding = ActivityMapBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapAPI);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
 
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {
 
-        mapAPI = googleMap;
+        googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.style_json));
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
-                buildGoogleApiClient();
-                mapAPI.setMyLocationEnabled(true);
-            }
-        }
-        else{
-            buildGoogleApiClient();
-            mapAPI.setMyLocationEnabled(true);
-        }
+        LatLng ayasofya = new LatLng(41.008583, 28.980175);
+        LatLng dolmabahce = new LatLng(41.0391643, 29.0004594);
+        LatLng suleymaniye = new LatLng(41.016047, 28.9639711);
+        LatLng topkapı = new LatLng(41.0115195, 28.9833789);
+        LatLng rahimikoc = new LatLng(41.0426561, 28.9495399);
 
-        /*LatLng CurrentLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mapAPI.addMarker(new MarkerOptions().position(CurrentLocation).title("Current Location"));
-        mapAPI.moveCamera(CameraUpdateFactory.newLatLng(CurrentLocation));*/
+
+        googleMap.addMarker(new MarkerOptions().position(ayasofya).title("Ayasofya").snippet("ayasofya insanlar tarafından ziyaret camidir ///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
+        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(dolmabahce).title("Dolmabahce").snippet("Dolmabahce gezilcek yerlerden \nbiridir istanbulda///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
+        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(suleymaniye).title("Süleymaniye").snippet("Süleymaniye gezilcek yerlerden \nbiridir istanbulda///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
+        googleMap.addMarker(new MarkerOptions().position(topkapı).title("Topkapı").snippet("Topkapı gezilcek yerlerden \nbiridir istanbulda///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
+        googleMap.addMarker(new MarkerOptions().position(rahimikoc).title("Rahmi Koç").snippet("Rahmi gezilcek yerlerden \nbiridir istanbulda///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
+
+
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
+        googleMap.setOnInfoWindowClickListener(this);
 
     }
 
-    /*private void getCurrentLocation(){
+
+    @Override
+    public void onInfoWindowClick( Marker marker) {
+
+        //bilgi+img // ile parse
+        String[] parts = marker.getSnippet().split("///");
+
+        String snippet = parts[0];
+        String imgurl = parts[1];
+
+
+        TextView txtclose,textView,textView1;
+        myPop.setContentView(R.layout.popup);
+        txtclose =(TextView) myPop.findViewById(R.id.txtclose);
+        txtclose.setText("X");
+        textView1 =(TextView) myPop.findViewById(R.id.title);
+        textView1.setText(marker.getTitle());
+        textView =(TextView) myPop.findViewById(R.id.text);
+        textView.setText(snippet);
+
+
+       new FetchImage(imgurl).start();
 
 
 
-        if(ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION
-            }, REQUEST_CODE);
-            return;
-        }
 
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+        txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    currentLocation = location;
-                    Toast.makeText(getApplicationContext(), (int) currentLocation.getLatitude(), Toast.LENGTH_LONG)
-                            .show();
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
-                            .findFragmentById(R.id.mapAPI);
-                    assert supportMapFragment != null;
-                    supportMapFragment.getMapAsync(MainActivity.this);
-                }
+            public void onClick(View v) {
+                myPop.dismiss();
             }
         });
-
-
-
+        myPop.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myPop.show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (REQUEST_CODE) {
-            case REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCurrentLocation();
+
+    class FetchImage extends Thread {
+
+        ImageView img;
+        String URL;
+        Bitmap bitmap;
+    //    ImageView img;
+
+        FetchImage(String URL) {
+
+            this.URL = URL;
+
+        }
+
+        @Override
+        public void run() {
+
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    progressDialog = new ProgressDialog(Map.this);
+                //    progressDialog.setMessage("Getting your pic....");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
                 }
-                break;
+            });
+
+            InputStream inputStream = null;
+            try {
+                inputStream = new URL(URL).openStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    img=(ImageView) myPop.findViewById(R.id.img);
+                    img.setImageBitmap(bitmap);
+
+                }
+            });
+
+
         }
-    }*/
-
-    protected synchronized void buildGoogleApiClient(){
-        mGoogleApiClient=new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
-        mGoogleApiClient.connect();
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest=new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        currentLocation=location;
-        if(mCurrentLocationMarker!=null){
-            mCurrentLocationMarker.remove();
-        }
-        LatLng latLng=new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions=new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        mCurrentLocationMarker=mapAPI.addMarker(markerOptions);
-    }
 }
-
-
-

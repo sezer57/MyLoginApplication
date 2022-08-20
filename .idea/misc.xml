@@ -3,8 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable-anydpi/ic_action_maps.xml" value="0.166" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.166" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/background_splashscreen.xml" value="0.166" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/cerclebackground.xml" value="0.1" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.14" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.18" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.166" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.166" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/drawable/ic_launcher_background.xml" value="0.166" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/layout/activity_giris.xml" value="0.1503623188405797" />
         <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/layout/activity_main.xml" value="0.1539855072463768" />
         <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/layout/activity_map.xml" value="0.1539855072463768" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/layout/activity_profile.xml" value="0.1503623188405797" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/layout/activity_register.xml" value="0.1503623188405797" />
+        <entry key="..\:/Users/yasin/AndroidStudioProjects/Stajasd/app/src/main/res/layout/popup.xml" value="0.33" />
         <entry key="..\:/Users/zeeyn/AndroidStudioProjects/MyLoginApplication/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2075" />
         <entry key="..\:/Users/zeeyn/AndroidStudioProjects/MyLoginApplication/app/src/main/res/drawable/background_splashscreen.xml" value="0.2" />
         <entry key="..\:/Users/zeeyn/AndroidStudioProjects/MyLoginApplication/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.225" />
