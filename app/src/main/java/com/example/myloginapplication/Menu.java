@@ -26,7 +26,15 @@ public class Menu extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Menu.this, Map.class));
+                startActivity(new Intent(Menu.this, Maps.class));
+            }
+        });
+
+        TextView button3 = findViewById(R.id.places);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Menu.this, Locations.class));
             }
         });
 

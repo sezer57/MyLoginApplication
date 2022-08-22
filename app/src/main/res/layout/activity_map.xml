@@ -6,7 +6,7 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Map"
+    tools:context=".Maps"
     android:drawable="@drawable/ic_baseline_check_24"
-    map:cameraZoom="12"
+    map:cameraZoom="13"
     />
