@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,19 +32,19 @@ import java.util.List;
 import java.util.Map;
 
 public class Locations extends AppCompatActivity {
-    TextView textView;
+    TextView a;
     RecyclerView recyclerView;
     ArrayList<ModelMaps> mapsArrayList;
     AdapterPost adapterPost;
     ProgressDialog progressDialog;
     ProgressDialog loading;
-    List<String> alloc = new ArrayList<String>();
+   // List<String> alloc = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locations);
-
+        a = findViewById(R.id.textView4);
         getloc();
 
 
@@ -70,10 +71,14 @@ public class Locations extends AppCompatActivity {
                            // String message = response.getString("id");
 
                             for (int i=0; i<10; i++) {
-                                JSONObject actor = response.getJSONObject(i);
-                                String name = actor.getString("name");
-                                alloc.add(name);
-                                System.out.println(alloc);
+                                JSONObject loc = response.getJSONObject(i);
+                                Integer id = loc.getInt("id");
+                                String name = loc.getString("name");
+                                Double longtitude = loc.getDouble("longtitude");
+                                Double latitude = loc.getDouble("latitude");
+                                Integer price = loc.getInt("price");
+
+                                a.append(String.valueOf(id) + " "+name+" "+String.valueOf(longtitude)+" "+String.valueOf(price)+"\n\n");
                             }
 
                           //  textView.setText(message);

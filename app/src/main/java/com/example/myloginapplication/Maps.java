@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,21 +27,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myloginapplication.databinding.ActivityMapBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -50,7 +50,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,13 +64,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class Maps extends FragmentActivity implements
         GoogleMap.OnInfoWindowClickListener,
@@ -78,6 +79,14 @@ public class Maps extends FragmentActivity implements
     ProgressDialog progressDialog;
     Dialog myPop;
 
+    //---
+    private static final String TAG = Maps.class.getSimpleName();
+    private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private boolean mLocationPermissionGranted;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final String KEY_LOCATION = "location";
+    //--
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -106,28 +115,107 @@ public class Maps extends FragmentActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Prompt the user for permission.
+        getLocationPermission();
+
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
+
+        // Get the current location of the device and set the position of the map.
+
 
         googleMap.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
                         this, R.raw.style_json));
 
-        LatLng ayasofya = new LatLng(41.008583, 28.980175);
 
+///baslangıc
+
+        JsonArrayRequest  jsonObjReq = new JsonArrayRequest(
+                Request.Method.GET, Constant.GET_LOCATIONS, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray  response) {
+                        try {
+                            // String message = response.getString("id");
+
+                            for (int i=0; i<response.length(); i++) {
+                                JSONObject loc = response.getJSONObject(i);
+                                Integer id = loc.getInt("id");
+                                String name = loc.getString("name");
+                                Double longtitude = loc.getDouble("longtitude");
+                                Double latitude = loc.getDouble("latitude");
+                                Integer price = loc.getInt("price");
+                                LatLng ayasofya = new LatLng(longtitude, latitude);
+                                googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
+
+                                //  a.append(String.valueOf(id) + " "+name+" "+String.valueOf(longtitude)+" "+String.valueOf(latitude)+"\n\n");
+                            }
+
+                            //  textView.setText(message);
+                            //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "error" + e, Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "No value present"+error, Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+
+            /**
+             * Passing some request headers
+             */
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+        };
+
+        // Adding request to request queue
+        Volley.newRequestQueue(this).add(jsonObjReq);
+
+
+
+
+
+        //bitis
+
+
+
+
+
+
+
+
+        LatLng ayasofya = new LatLng(41.008583, 28.980175);
         LatLng dolmabahce = new LatLng(41.0391643, 29.0004594);
         LatLng suleymaniye = new LatLng(41.016047, 28.9639711);
-        LatLng topkapı = new LatLng(41.0115195, 28.9833789);
-        LatLng rahimikoc = new LatLng(41.0426561, 28.9495399);
+//        LatLng topkapı = new LatLng(41.0115195, 28.9833789);
+  //      LatLng rahimikoc = new LatLng(41.0426561, 28.9495399);
 
 
         //ziyaret edilmemiş
-        googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title("Ayasofya").snippet("ayasofya insanlar tarafından ziyaret camidir "));
-        googleMap.addMarker(new MarkerOptions().flat(true).position(topkapı).title("Topkapı").snippet("Topkapı gezilcek yerlerden \nbiridir istanbulda"));
-        googleMap.addMarker(new MarkerOptions().flat(true).position(rahimikoc).title("Rahmi Koç").snippet("Rahmi gezilcek yerlerden \nbiridir istanbulda"));
+    //    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title("Ayasofya").snippet("ayasofya insanlar tarafından ziyaret camidir "));
+     //   googleMap.addMarker(new MarkerOptions().flat(true).position(topkapı).title("Topkapı").snippet("Topkapı gezilcek yerlerden \nbiridir istanbulda"));
+       // googleMap.addMarker(new MarkerOptions().flat(true).position(rahimikoc).title("Rahmi Koç").snippet("Rahmi gezilcek yerlerden \nbiridir istanbulda"));
         googleMap.setOnInfoWindowClickListener(this);
 
         //ziyaret edilmiş
-        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(dolmabahce).title("Dolmabahce").snippet("Dolmabahce gezilcek yerlerden \nbiridir istanbulda///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
-        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(suleymaniye).title("Süleymaniye").snippet("Süleymaniye gezilcek yerlerden \nbiridir istanbulda///https://upload.wikimedia.org/wikipedia/commons/2/29/Ayasofya%2C_%C4%B0stanbul%2C_T%C3%BCrkiye.jpg"));
+        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(dolmabahce).title("Dolmabahce").snippet("Dolmabahce gezilcek yerlerden biridir \nistanbulda "));
+        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(suleymaniye).title("Süleymaniye").snippet("Süleymaniye gezilcek yerlerden biridir \nistanbulda "));
 
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
@@ -138,14 +226,16 @@ public class Maps extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+
+        //ziyaret edilmiş
         TextView txtclose, textView, textView1, txtclose1, txtclose2;
         Button btnvisit, btnvisitok;
         if (!marker.isFlat()) {
             //bilgi+img // ile parse
-            String[] parts = marker.getSnippet().split("///");
+         //   String[] parts = marker.getSnippet().split("///");
 
-            String snippet = parts[0];
-            String imgurl = parts[1];
+           // String snippet = parts[0];
+           // String imgurl = parts[1];
 
 
             myPop.setContentView(R.layout.popup);
@@ -154,10 +244,10 @@ public class Maps extends FragmentActivity implements
             textView1 = (TextView) myPop.findViewById(R.id.title);
             textView1.setText(marker.getTitle());
             textView = (TextView) myPop.findViewById(R.id.text);
-            textView.setText(snippet);
+            textView.setText(marker.getSnippet());
 
 
-            new FetchImage(imgurl).start();
+        //    new FetchImage(imgurl).start();
 
 
             txtclose.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +303,7 @@ public class Maps extends FragmentActivity implements
                     txtclose2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            myPop.dismiss();
                         }
                     });
 
@@ -458,6 +548,60 @@ public class Maps extends FragmentActivity implements
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+
+    private void updateLocationUI() {
+        if (mMap == null) {
+            return;
+        }
+        try {
+            if (mLocationPermissionGranted) {
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            } else {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                getLocationPermission();
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+        updateLocationUI();
     }
 }
 
