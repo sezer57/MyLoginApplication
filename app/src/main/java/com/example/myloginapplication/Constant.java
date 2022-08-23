@@ -7,7 +7,7 @@ public class Constant {
     public static final String LOGIN_URL = MAIN_URL+"/auth/login";
     public static final String SAVE_URL = MAIN_URL+"/history/upload";
     public static final String GET_LOCATIONS = MAIN_URL+"/location";
-    public static final String VIEW_NEWS = MAIN_URL+"/student/view_news.php";
+    public static final String GET_HISTORY = MAIN_URL+"/history/";
     public static final String DELETE_NEWS_URL = MAIN_URL+"/student/delete_news.php";
     public static final String UPDATE_PROFILE_URL = MAIN_URL+"/student/update_profile.php";
     public static final String DELETE__POFILE_URL = MAIN_URL+"/student/delete_profile.php";

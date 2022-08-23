@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -45,10 +47,6 @@ public class Locations extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locations);
         a = findViewById(R.id.textView4);
-        getloc();
-
-
-
 
 
 
@@ -60,61 +58,5 @@ public class Locations extends AppCompatActivity {
 
 
     }
-    public void getloc(){
 
-        JsonArrayRequest  jsonObjReq = new JsonArrayRequest(
-                Request.Method.GET, Constant.GET_LOCATIONS, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray  response) {
-                        try {
-                           // String message = response.getString("id");
-
-                            for (int i=0; i<10; i++) {
-                                JSONObject loc = response.getJSONObject(i);
-                                Integer id = loc.getInt("id");
-                                String name = loc.getString("name");
-                                Double longtitude = loc.getDouble("longtitude");
-                                Double latitude = loc.getDouble("latitude");
-                                Integer price = loc.getInt("price");
-
-                                a.append(String.valueOf(id) + " "+name+" "+String.valueOf(longtitude)+" "+String.valueOf(price)+"\n\n");
-                            }
-
-                          //  textView.setText(message);
-                            //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "error" + e, Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "No value present"+error, Toast.LENGTH_LONG).show();
-
-            }
-        }) {
-
-            /**
-             * Passing some request headers
-             */
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-
-        };
-
-        // Adding request to request queue
-        Volley.newRequestQueue(this).add(jsonObjReq);
-
-
-    }
-
-    }
+}

@@ -12,17 +12,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Profile extends AppCompatActivity {
-    TextView user;
+    TextView user,userbalance;
     Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        user=findViewById(R.id.user)    ;
-
+        user=findViewById(R.id.user);
+       // userbalance=findViewById(R.id.bakiyebutton);
         SharedPreferences sp = Profile.this.getSharedPreferences("User", Context.MODE_PRIVATE);
-        user.setText(sp.getString(Constant.ROLL_SHARED_username,"s"));
+        user.setText(sp.getString(Constant.ROLL_SHARED_userid,"s"));
 
         logout=findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {

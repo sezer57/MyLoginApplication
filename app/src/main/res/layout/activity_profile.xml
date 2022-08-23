@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bakiyebutton"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Menu"
-    android:background="@drawable/background">
+    android:background="@drawable/background"
+    tools:context=".Menu">
 
     <ImageView
         android:layout_width="176dp"
@@ -44,16 +45,18 @@
         android:background="@drawable/roundbtn3"
         android:text="back"
         android:textSize="20dp" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button4"
         android:layout_width="210dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="90dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="560dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
         android:text="add money"
-        android:textSize="20dp"/>
+        android:textSize="20dp" />
+
     <TextView
         android:id="@+id/welcome"
         android:layout_width="wrap_content"
@@ -79,27 +82,44 @@
         android:textColor="@color/material_on_background_emphasis_medium"
         android:textSize="34sp"
         android:textStyle="bold" />
-    <androidx.cardview.widget.CardView
-        android:layout_width="350dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="360dp"
+
+    <ImageView
+        android:layout_width="352dp"
+        android:layout_height="196dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="340dp"
         android:layout_marginEnd="1000dp"
+        android:background="@drawable/card"
         android:text="add money"
-        android:textColor="@color/material_on_background_emphasis_medium"
-        android:textSize="20dp"
+
         android:textStyle="bold">
 
-        <EditText
-            android:id="@+id/editTextTextPersonName2"
-            android:layout_width="250dp"
-            android:layout_height="160dp"
-            android:layout_marginStart="85dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Bakiye :"
-            android:textSize="30dp"
-            android:textStyle="bold"/>
+        <!--        <EditText-->
+        <!--            android:id="@+id/editTextTextPersonName2"-->
+        <!--            android:layout_width="250dp"-->
+        <!--            android:layout_height="160dp"-->
+        <!--            android:layout_marginStart="85dp"-->
+        <!--            android:ems="10"-->
+        <!--            android:inputType="textPersonName"-->
+        <!--            android:text="Bakiye :"-->
+        <!--            android:textSize="30dp"-->
+        <!--            android:textStyle="bold" />-->
 
-    </androidx.cardview.widget.CardView>
+    </ImageView>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginEnd="1000dp"
+        android:fontFamily="sans-serif-black"
+        android:text="50TL"
+        android:textAlignment="center"
+        android:textSize="40dp" />
 </RelativeLayout>

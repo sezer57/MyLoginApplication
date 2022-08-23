@@ -1,12 +1,14 @@
 package com.example.myloginapplication;
-
+import com.example.myloginapplication.Locations;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -66,7 +68,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -78,7 +82,7 @@ public class Maps extends FragmentActivity implements
     Handler mainHandler = new Handler();
     ProgressDialog progressDialog;
     Dialog myPop;
-
+    List<String> mynamelist = new ArrayList<>();
     //---
     private static final String TAG = Maps.class.getSimpleName();
     private GoogleMap mMap;
@@ -106,7 +110,7 @@ public class Maps extends FragmentActivity implements
         binding = ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
+        List<String> mynamelist =getloc();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -141,6 +145,8 @@ public class Maps extends FragmentActivity implements
                         try {
                             // String message = response.getString("id");
 
+
+
                             for (int i=0; i<response.length(); i++) {
                                 JSONObject loc = response.getJSONObject(i);
                                 Integer id = loc.getInt("id");
@@ -149,7 +155,22 @@ public class Maps extends FragmentActivity implements
                                 Double latitude = loc.getDouble("latitude");
                                 Integer price = loc.getInt("price");
                                 LatLng ayasofya = new LatLng(longtitude, latitude);
-                                googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
+                                if (mynamelist.contains(name)){
+                                    System.out.println("önce ");
+                                    googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(ayasofya).title(name).snippet(price.toString()+"TL"));
+                                    System.out.println("yeşil");
+                                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
+                                }
+                                else{
+                                    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
+                                    System.out.println("kırmızı");
+                                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
+                                }
+
+
+                                //if else ile isim kontrol
+
+                               // googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
 
                                 //  a.append(String.valueOf(id) + " "+name+" "+String.valueOf(longtitude)+" "+String.valueOf(latitude)+"\n\n");
                             }
@@ -195,14 +216,9 @@ public class Maps extends FragmentActivity implements
 
 
 
-
-
-
-
-
-        LatLng ayasofya = new LatLng(41.008583, 28.980175);
-        LatLng dolmabahce = new LatLng(41.0391643, 29.0004594);
-        LatLng suleymaniye = new LatLng(41.016047, 28.9639711);
+     //   LatLng ayasofya = new LatLng(41.008583, 28.980175);
+     //   LatLng dolmabahce = new LatLng(41.0391643, 29.0004594);
+       // LatLng suleymaniye = new LatLng(41.016047, 28.9639711);
 //        LatLng topkapı = new LatLng(41.0115195, 28.9833789);
   //      LatLng rahimikoc = new LatLng(41.0426561, 28.9495399);
 
@@ -214,11 +230,11 @@ public class Maps extends FragmentActivity implements
         googleMap.setOnInfoWindowClickListener(this);
 
         //ziyaret edilmiş
-        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(dolmabahce).title("Dolmabahce").snippet("Dolmabahce gezilcek yerlerden biridir \nistanbulda "));
-        googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(suleymaniye).title("Süleymaniye").snippet("Süleymaniye gezilcek yerlerden biridir \nistanbulda "));
+     //   googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(dolmabahce).title("Dolmabahce").snippet("Dolmabahce gezilcek yerlerden biridir \nistanbulda "));
+       // googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(suleymaniye).title("Süleymaniye").snippet("Süleymaniye gezilcek yerlerden biridir \nistanbulda "));
 
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
+
         googleMap.setOnInfoWindowClickListener(this);
 
     }
@@ -603,5 +619,44 @@ public class Maps extends FragmentActivity implements
         }
         updateLocationUI();
     }
+
+
+    public List<String> getloc(){
+        SharedPreferences sp = Maps.this.getSharedPreferences("User", Context.MODE_PRIVATE);
+
+        JsonArrayRequest  jsonObjReq = new JsonArrayRequest(
+                Request.Method.GET, Constant.GET_HISTORY+sp.getString(Constant.ROLL_SHARED_userid,"s"), null,
+                new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray  response) {
+                        try {
+                            // String message = response.getString("id");
+
+                            for (int i=0; i< response.length(); i++) {
+                                JSONObject loc = response.getJSONObject(i);
+                                String name = loc.getString("name");
+                                mynamelist.add(name);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "error" + e, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "No value present"+error, Toast.LENGTH_LONG).show();
+            }
+        }) {
+        };
+        // Adding request to request queue
+        Volley.newRequestQueue(this).add(jsonObjReq);
+        return mynamelist;
+    }
+
+
+
 }
 

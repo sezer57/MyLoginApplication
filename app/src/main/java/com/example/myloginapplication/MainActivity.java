@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                                     SharedPreferences.Editor editor = sp.edit();
                                     //Adding values to editor
                                     editor.putString(Constant.ROLL_SHARED_username, a);
-                                    //    editor.putString(Constant.ROLL_SHARED_token, token);
-                                    //     editor.putString(Constant.ROLL_SHARED_userid, userid);
+                                    editor.putString(Constant.ROLL_SHARED_token, token);
+                                    editor.putString(Constant.ROLL_SHARED_userid, userid);
                                     //Saving values to editor
                                     editor.apply();
                                     Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_LONG).show();
