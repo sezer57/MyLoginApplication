@@ -112,11 +112,25 @@ public class Maps extends FragmentActivity implements
 
         binding = ActivityMapBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        loading = new ProgressDialog(this);
+        loading.setTitle("CREATING");
+        loading.setMessage("Please wait....");
+        loading.show();
         List<String> mynamelist =getloc();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+        Handler hndler= new Handler();
+
+        hndler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(Maps.this::onMapReady);
+                loading.dismiss();
+            }
+            // Kodların ne kadar süre sonra çalışacağını belirttik. Burada 1000 değeri ms (milisaniye)
+        },5000);
+
     }
 
 
@@ -159,6 +173,7 @@ public class Maps extends FragmentActivity implements
                                 latitude = loc.getDouble("latitude");
                                 Integer price = loc.getInt("price");
                                 LatLng ayasofya = new LatLng(longtitude, latitude);
+
                                 if (mynamelist.contains(name)){
                                     googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(ayasofya).title(name).snippet(price.toString()+"TL"));
                                  //   System.out.println("yeşil");
@@ -647,8 +662,14 @@ public class Maps extends FragmentActivity implements
         };
         // Adding request to request queue
         Volley.newRequestQueue(this).add(jsonObjReq);
+
+
         return mynamelist;
     }
+
+    private void sleep(int i) {
+    }
+
     private void sendhistory(String comment,String locid){
 
         SharedPreferences sp = Maps.this.getSharedPreferences("User", Context.MODE_PRIVATE);
@@ -677,6 +698,8 @@ public class Maps extends FragmentActivity implements
                             try {
                                 Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
                                 loading.dismiss();
+                                Intent masp = new Intent(Maps.this, Maps.class);
+                                startActivity(masp);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
