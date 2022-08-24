@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                                     editor.putString(Constant.ROLL_SHARED_userid, userid);
                                     //Saving values to editor
                                     editor.apply();
-                                    Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_LONG).show();
+                                  //  Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_LONG).show();
                                     loading.dismiss();
                                     Intent login = new Intent(MainActivity.this, Menu.class);
                                     startActivity(login);

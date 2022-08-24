@@ -1,5 +1,8 @@
 package com.example.myloginapplication;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class Constant {
     public static final String MAIN_URL =  "https://mylocapi.herokuapp.com";
     //others url
@@ -9,6 +12,8 @@ public class Constant {
     public static final String GET_LOCATIONS = MAIN_URL+"/location";
     public static final String GET_HISTORY = MAIN_URL+"/history/";
     public static final String SEND_HISTORY = MAIN_URL+"/history";
+    public static final String GET_ADD_BALANCE = MAIN_URL+"/user/add-to-card/";
+    public static final String GET_BALANCE = MAIN_URL+"/user/card/";
 
     //Keys for server communications
 
@@ -22,8 +27,5 @@ public class Constant {
     public static final String ROLL_SHARED_username = "asdasd";
     public static final String ROLL_SHARED_token = "roll";
     public static final String ROLL_SHARED_userid = "iid";
-
-
-
 
 }

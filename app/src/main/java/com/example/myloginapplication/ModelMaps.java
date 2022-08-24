@@ -4,12 +4,22 @@ public class ModelMaps {
     String name;
     Double longtitude,latitude;
     Integer price;
+    Integer id;
 
-    public ModelMaps(String name, Double longtitude, Double latitude, Integer price) {
+    public ModelMaps(Integer id,String name, Double longtitude, Double latitude, Integer price) {
+        this.id =id;
         this.name = name;
         this.longtitude = longtitude;
         this.latitude = latitude;
         this.price = price;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

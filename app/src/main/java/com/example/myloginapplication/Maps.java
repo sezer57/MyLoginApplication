@@ -1,6 +1,5 @@
 package com.example.myloginapplication;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.myloginapplication.Locations;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +15,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,7 +22,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -45,7 +41,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myloginapplication.databinding.ActivityMapBinding;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -55,8 +50,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,10 +60,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,19 +70,15 @@ import java.util.Map;
 public class Maps extends FragmentActivity implements
         GoogleMap.OnInfoWindowClickListener,
         OnMapReadyCallback {
-    public static final String KEY_User_Document1 = "doc1";
     ProgressDialog loading;
-    Handler mainHandler = new Handler();
-    ProgressDialog progressDialog;
     Dialog myPop;
     List<String> mynamelist = new ArrayList<>();
+    HashMap<String,String> mynameimagelist = new HashMap<String,String>();
+    HashMap<String,String> mylonglat = new HashMap<String,String>();
     //---
-    private static final String TAG = Maps.class.getSimpleName();
     private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
     private boolean mLocationPermissionGranted;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private static final String KEY_LOCATION = "location";
     //--
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -128,8 +114,7 @@ public class Maps extends FragmentActivity implements
                 mapFragment.getMapAsync(Maps.this::onMapReady);
                 loading.dismiss();
             }
-            // Kodların ne kadar süre sonra çalışacağını belirttik. Burada 1000 değeri ms (milisaniye)
-        },5000);
+        },6000);
 
     }
 
@@ -153,7 +138,6 @@ public class Maps extends FragmentActivity implements
 
 
 ///baslangıc
-
         JsonArrayRequest  jsonObjReq = new JsonArrayRequest(
                 Request.Method.GET, Constant.GET_LOCATIONS, null,
                 new Response.Listener<JSONArray>() {
@@ -165,6 +149,7 @@ public class Maps extends FragmentActivity implements
 
 
                             for (int i=0; i<response.length(); i++) {
+
                                 JSONObject loc = response.getJSONObject(i);
                                 Integer id = loc.getInt("id");
                                 String name = loc.getString("name");
@@ -175,23 +160,21 @@ public class Maps extends FragmentActivity implements
                                 LatLng ayasofya = new LatLng(longtitude, latitude);
 
                                 if (mynamelist.contains(name)){
-                                    googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(ayasofya).title(name).snippet(price.toString()+"TL"));
+                                    int index = mynamelist.indexOf(name);
+                                 //   Bitmap b = mynamelist.get(index+2);
+                                    googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(ayasofya).title(mynamelist.get(index)).snippet(mynamelist.get(index+1)));
                                  //   System.out.println("yeşil");
                                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
                                 //    Maps.this.wait(1000);
                                 }
                                 else{
-                                    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL///"+String.valueOf(id)));
+                                    mylonglat.put(name,String.valueOf(id)+"///"+String.valueOf(longtitude)+"///"+String.valueOf(latitude));
+
+                                    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
                                 //    System.out.println("kırmızı");
                                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
                                 }
 
-
-                                //if else ile isim kontrol
-
-                               // googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
-
-                                //  a.append(String.valueOf(id) + " "+name+" "+String.valueOf(longtitude)+" "+String.valueOf(latitude)+"\n\n");
                             }
 
                             //  textView.setText(message);
@@ -241,12 +224,13 @@ public class Maps extends FragmentActivity implements
 
         TextView txtclose, textView, textView1, txtclose1, txtclose2;
         Button btnvisit, btnvisitok;
+        ImageView imga;
         if (!marker.isFlat()) {
             //bilgi+img // ile parse
-         //   String[] parts = marker.getSnippet().split("///");
+            String[] parts = marker.getSnippet().split("///");
 
-           // String snippet = parts[0];
-           // String imgurl = parts[1];
+            String title = parts[0];
+           // String bitpic = parts[1];
 
 
             myPop.setContentView(R.layout.popup);
@@ -257,6 +241,11 @@ public class Maps extends FragmentActivity implements
             textView = (TextView) myPop.findViewById(R.id.text);
             textView.setText(marker.getSnippet());
 
+
+           imga = (ImageView) myPop.findViewById(R.id.img);
+         //   System.out.println(mynameimagelist.get(title));
+            Bitmap a = StringToBitMap(mynameimagelist.get(marker.getTitle()));
+           imga.setImageBitmap(a);
 
         //    new FetchImage(imgurl).start();
 
@@ -273,15 +262,18 @@ public class Maps extends FragmentActivity implements
             //ziyaret edilmemiş
             ImageView img;
             myPop.setContentView(R.layout.popup1);
-            String[] parts = marker.getSnippet().split("///");
+            String[] parts = mylonglat.get(marker.getTitle()).split("///");
 
-             String snippet = parts[0];
-             String loc_id = parts[1];
+            // String snippet = parts[0];
+             String loc_id = parts[0];
+            String mlong = parts[1];
+            String mlat = parts[2];
+
 
             textView1 = (TextView) myPop.findViewById(R.id.title);
             textView1.setText(marker.getTitle());
             textView = (TextView) myPop.findViewById(R.id.textview);
-            textView.setText(snippet);
+            textView.setText(marker.getSnippet());
             btnvisit = (Button) myPop.findViewById(R.id.btnvisit);
             btnvisitok = (Button) myPop.findViewById(R.id.save);
             txtclose1 = (TextView) myPop.findViewById(R.id.txtclose1);
@@ -289,6 +281,21 @@ public class Maps extends FragmentActivity implements
             img = (ImageView) myPop.findViewById(R.id.imageView);
             img.setImageResource(R.drawable.ayasofya);
 
+            btnvisit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri gmmIntentUri = Uri.parse("google.streetview:cbll="+mlong+","+mlat+"");
+
+
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+                    mapIntent.setPackage("com.google.android.apps.maps");
+
+                    startActivity(mapIntent);
+
+                }
+
+            });
 
             btnvisitok.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -331,9 +338,20 @@ public class Maps extends FragmentActivity implements
                         public void onClick(View v) {
                             String str = commenttext.getText().toString();
 
+                            loading.setTitle("Uploding");
+                            loading.setMessage("Please wait....");
+                            loading.show();
+                            Handler hndler= new Handler();
+                            hndler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sendhistory(str,loc_id);
+                                    loading.dismiss();
+                                }
+                                // Kodların ne kadar süre sonra çalışacağını belirttik. Burada 1000 değeri ms (milisaniye)
+                            },2000);
 
 
-                                sendhistory(str,loc_id);
 
                         }
                     });
@@ -441,7 +459,7 @@ public class Maps extends FragmentActivity implements
                 String picturePath = c.getString(columnIndex);
                 c.close();
                 Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-                Log.w("path of image from gallery......******************.........", picturePath+"");
+                Log.w("path of image from ...", picturePath+"");
 
                 BitMapToString(thumbnail);
             }
@@ -509,58 +527,6 @@ public class Maps extends FragmentActivity implements
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
     }
 
-
-//fotograf çekme urldan
-    class FetchImage extends Thread {
-
-        ImageView img;
-        String URL;
-        Bitmap bitmap;
-        //    ImageView img;
-
-        FetchImage(String URL) {
-
-            this.URL = URL;
-
-        }
-
-        @Override
-        public void run() {
-
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    progressDialog = new ProgressDialog(Maps.this);
-                    //    progressDialog.setMessage("Getting your pic....");
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                }
-            });
-
-            InputStream inputStream = null;
-            try {
-                inputStream = new URL(URL).openStream();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    if (progressDialog.isShowing())
-                        progressDialog.dismiss();
-                    img = (ImageView) myPop.findViewById(R.id.img);
-                    img.setImageBitmap(bitmap);
-
-                }
-            });
-
-
-        }
-    }
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -611,23 +577,6 @@ public class Maps extends FragmentActivity implements
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
-//hatavar
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String permissions[],
-//                                           @NonNull int[] grantResults) {
-//        mLocationPermissionGranted = false;
-//        switch (requestCode) {
-//            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    mLocationPermissionGranted = true;
-//                }
-//            }
-//        }
-//        updateLocationUI();
-//    }
 
 
     public List<String> getloc(){
@@ -645,7 +594,14 @@ public class Maps extends FragmentActivity implements
                             for (int i=0; i< response.length(); i++) {
                                 JSONObject loc = response.getJSONObject(i);
                                 String name = loc.getString("name");
+                                String comment = loc.getString("comment");
+                                String piclist = loc.getString("picByte");
+                               // System.out.println(piclist);
                                 mynamelist.add(name);
+                                mynamelist.add(comment);
+                               mynameimagelist.put(name,piclist);
+
+                            //    mynamelist.add(b);
                             }
 
                         } catch (Exception e) {
@@ -667,8 +623,6 @@ public class Maps extends FragmentActivity implements
         return mynamelist;
     }
 
-    private void sleep(int i) {
-    }
 
     private void sendhistory(String comment,String locid){
 
@@ -697,9 +651,9 @@ public class Maps extends FragmentActivity implements
                         public void onResponse(JSONObject response) {
                             try {
                                 Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+
+
                                 loading.dismiss();
-                                Intent masp = new Intent(Maps.this, Maps.class);
-                                startActivity(masp);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -729,7 +683,8 @@ public class Maps extends FragmentActivity implements
 
             // Adding request to request queue
             Volley.newRequestQueue(this).add(jsonObjReq);
-
+        finish();
+        startActivity(getIntent());
 
 
     }

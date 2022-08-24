@@ -1,6 +1,8 @@
 package com.example.myloginapplication;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +33,33 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.HolderPost> {
 
     @Override
     public void onBindViewHolder(@NonNull HolderPost holder, int position) {
+
                 ModelMaps model =mapsArrayList.get(position);
+                  Integer id= model.getId();
                 String title = model.getName();
                 Integer price= model.getPrice();
                 Double longtitude =model.getLongtitude();
                 Double latitude = model.getLatitude();
 
                 holder.title.setText(title);
-                holder.price.setText(price);
+                holder.price.setText(String.valueOf(price)+"TL");
+                 holder.id.setText(String.valueOf(id));
+
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.streetview:cbll="+longtitude+","+latitude+"");
+
+
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                context.startActivity(mapIntent);
+
+            }
+
+        });
 
     }
 
@@ -53,9 +74,12 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.HolderPost> {
         public HolderPost (@NonNull View itemView){
             super(itemView);
 
+
             button = itemView.findViewById(R.id.button2);
             title = itemView.findViewById(R.id.titleloc);
             price = itemView.findViewById(R.id.price);
+            id = itemView.findViewById(R.id.id);
+
         }
     }
 }

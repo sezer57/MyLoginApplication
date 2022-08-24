@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bakiyebutton"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
@@ -47,7 +47,7 @@
         android:textSize="20dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button4"
+        android:id="@+id/addMoneyButton"
         android:layout_width="210dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -112,8 +112,8 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="131dp"
+        android:id="@+id/balance"
+        android:layout_width="185dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="360dp"
