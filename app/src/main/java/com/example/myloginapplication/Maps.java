@@ -1,4 +1,5 @@
 package com.example.myloginapplication;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.myloginapplication.Locations;
 import android.Manifest;
 import android.app.Activity;
@@ -23,8 +24,10 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,7 +81,7 @@ public class Maps extends FragmentActivity implements
         GoogleMap.OnInfoWindowClickListener,
         OnMapReadyCallback {
     public static final String KEY_User_Document1 = "doc1";
-
+    ProgressDialog loading;
     Handler mainHandler = new Handler();
     ProgressDialog progressDialog;
     Dialog myPop;
@@ -151,19 +154,20 @@ public class Maps extends FragmentActivity implements
                                 JSONObject loc = response.getJSONObject(i);
                                 Integer id = loc.getInt("id");
                                 String name = loc.getString("name");
-                                Double longtitude = loc.getDouble("longtitude");
-                                Double latitude = loc.getDouble("latitude");
+                                double longtitude,latitude;
+                                longtitude = loc.getDouble("longtitude");
+                                latitude = loc.getDouble("latitude");
                                 Integer price = loc.getInt("price");
                                 LatLng ayasofya = new LatLng(longtitude, latitude);
                                 if (mynamelist.contains(name)){
-                                    System.out.println("önce ");
                                     googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(ayasofya).title(name).snippet(price.toString()+"TL"));
-                                    System.out.println("yeşil");
+                                 //   System.out.println("yeşil");
                                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
+                                //    Maps.this.wait(1000);
                                 }
                                 else{
-                                    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL"));
-                                    System.out.println("kırmızı");
+                                    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title(name).snippet(price.toString()+"TL///"+String.valueOf(id)));
+                                //    System.out.println("kırmızı");
                                     googleMap.moveCamera(CameraUpdateFactory.newLatLng(ayasofya));
                                 }
 
@@ -208,32 +212,7 @@ public class Maps extends FragmentActivity implements
         // Adding request to request queue
         Volley.newRequestQueue(this).add(jsonObjReq);
 
-
-
-
-
-        //bitis
-
-
-
-     //   LatLng ayasofya = new LatLng(41.008583, 28.980175);
-     //   LatLng dolmabahce = new LatLng(41.0391643, 29.0004594);
-       // LatLng suleymaniye = new LatLng(41.016047, 28.9639711);
-//        LatLng topkapı = new LatLng(41.0115195, 28.9833789);
-  //      LatLng rahimikoc = new LatLng(41.0426561, 28.9495399);
-
-
-        //ziyaret edilmemiş
-    //    googleMap.addMarker(new MarkerOptions().flat(true).position(ayasofya).title("Ayasofya").snippet("ayasofya insanlar tarafından ziyaret camidir "));
-     //   googleMap.addMarker(new MarkerOptions().flat(true).position(topkapı).title("Topkapı").snippet("Topkapı gezilcek yerlerden \nbiridir istanbulda"));
-       // googleMap.addMarker(new MarkerOptions().flat(true).position(rahimikoc).title("Rahmi Koç").snippet("Rahmi gezilcek yerlerden \nbiridir istanbulda"));
         googleMap.setOnInfoWindowClickListener(this);
-
-        //ziyaret edilmiş
-     //   googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(dolmabahce).title("Dolmabahce").snippet("Dolmabahce gezilcek yerlerden biridir \nistanbulda "));
-       // googleMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(suleymaniye).title("Süleymaniye").snippet("Süleymaniye gezilcek yerlerden biridir \nistanbulda "));
-
-
 
         googleMap.setOnInfoWindowClickListener(this);
 
@@ -244,6 +223,7 @@ public class Maps extends FragmentActivity implements
     public void onInfoWindowClick(Marker marker) {
 
         //ziyaret edilmiş
+
         TextView txtclose, textView, textView1, txtclose1, txtclose2;
         Button btnvisit, btnvisitok;
         if (!marker.isFlat()) {
@@ -275,13 +255,18 @@ public class Maps extends FragmentActivity implements
             myPop.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             myPop.show();
         } else {
-
+            //ziyaret edilmemiş
             ImageView img;
             myPop.setContentView(R.layout.popup1);
+            String[] parts = marker.getSnippet().split("///");
+
+             String snippet = parts[0];
+             String loc_id = parts[1];
+
             textView1 = (TextView) myPop.findViewById(R.id.title);
             textView1.setText(marker.getTitle());
             textView = (TextView) myPop.findViewById(R.id.textview);
-            textView.setText(marker.getSnippet());
+            textView.setText(snippet);
             btnvisit = (Button) myPop.findViewById(R.id.btnvisit);
             btnvisitok = (Button) myPop.findViewById(R.id.save);
             txtclose1 = (TextView) myPop.findViewById(R.id.txtclose1);
@@ -297,15 +282,18 @@ public class Maps extends FragmentActivity implements
                     Button image, save;
 
                     myPop.setContentView(R.layout.popup2);
-
+                    EditText commenttext;
                     image = (Button) myPop.findViewById(R.id.button);
                     save = (Button) myPop.findViewById(R.id.save);
                     textView1 = (TextView) myPop.findViewById(R.id.title);
                     textView1.setText(marker.getTitle());
                     txtclose2 = (TextView) myPop.findViewById(R.id.txtclose1);
                     txtclose2.setText("X");
-                    ImageView imageView;
-                    imageView = (ImageView) myPop.findViewById(R.id.imageView3);
+                    commenttext = (EditText) myPop.findViewById(R.id.editcomment);
+
+
+
+
                     image.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -326,8 +314,11 @@ public class Maps extends FragmentActivity implements
                     save.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            String str = commenttext.getText().toString();
 
 
+
+                                sendhistory(str,loc_id);
 
                         }
                     });
@@ -442,6 +433,9 @@ public class Maps extends FragmentActivity implements
         }
     }
     public byte[] BitMapToString(Bitmap userImage1) {
+        ImageView imageView;
+        imageView = (ImageView) myPop.findViewById(R.id.imageView3);
+        imageView.setImageBitmap(userImage1);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         userImage1.compress(Bitmap.CompressFormat.PNG, 60, baos);
         b = baos.toByteArray();
@@ -501,7 +495,7 @@ public class Maps extends FragmentActivity implements
     }
 
 
-
+//fotograf çekme urldan
     class FetchImage extends Thread {
 
         ImageView img;
@@ -602,23 +596,23 @@ public class Maps extends FragmentActivity implements
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                }
-            }
-        }
-        updateLocationUI();
-    }
+//hatavar
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           @NonNull String permissions[],
+//                                           @NonNull int[] grantResults) {
+//        mLocationPermissionGranted = false;
+//        switch (requestCode) {
+//            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    mLocationPermissionGranted = true;
+//                }
+//            }
+//        }
+//        updateLocationUI();
+//    }
 
 
     public List<String> getloc(){
@@ -655,7 +649,67 @@ public class Maps extends FragmentActivity implements
         Volley.newRequestQueue(this).add(jsonObjReq);
         return mynamelist;
     }
+    private void sendhistory(String comment,String locid){
 
+        SharedPreferences sp = Maps.this.getSharedPreferences("User", Context.MODE_PRIVATE);
+
+
+            loading = new ProgressDialog(this);
+            // loading.setIcon(R.drawable.wait_icon);
+            loading.setTitle("SAVING");
+            loading.setMessage("Please wait....");
+            loading.show();
+
+            JSONObject js = new JSONObject();
+            try {
+               js.put("location_id", locid);
+                js.put("user_id", sp.getString(Constant.ROLL_SHARED_userid,"s"));
+                js.put("comment", comment);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            // Make request for JSONObject
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                    Request.Method.POST, Constant.SEND_HISTORY, js,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+                                loading.dismiss();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "send Error !1" + e, Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "No value present", Toast.LENGTH_LONG).show();
+                    loading.dismiss();
+                }
+            }) {
+
+                /**
+                 * Passing some request headers
+                 */
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    return headers;
+                }
+
+            };
+
+            // Adding request to request queue
+            Volley.newRequestQueue(this).add(jsonObjReq);
+
+
+
+    }
 
 
 }
